@@ -275,6 +275,43 @@ namespace BugTracker.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+        //GET: /Manage/ChangeName
+        public ActionResult ChangeName()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            ResetNameViewModel model = new ResetNameViewModel();
+            if (user != null)
+            {
+                model.FirstName = user.FirstName;
+                model.LastName = user.LastName;
+                model.FullName = user.FirstName + " " + user.LastName;
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("Index"); 
+            }
+        }
+
+        //POST: /Manage/ChangeName
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangeName(ResetNameViewModel model)
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            if (user != null)
+            {
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+               
+                UserManager.Update(user);
+            }
+            return RedirectToAction("Index");
+        }
 
         //
         // GET: /Manage/ManageLogins
@@ -299,7 +336,7 @@ namespace BugTracker.Controllers
             });
         }
 
-        //
+        
         // POST: /Manage/LinkLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
