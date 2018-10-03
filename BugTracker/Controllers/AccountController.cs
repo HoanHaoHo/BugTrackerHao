@@ -160,6 +160,7 @@ namespace BugTracker.Controllers
                 {
                     UserName = model.Email,
                     Email = model.Email,
+                    Name = model.Name,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     DisplayName = model.DisplayName

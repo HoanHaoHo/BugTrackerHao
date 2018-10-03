@@ -48,8 +48,7 @@ namespace BugTracker.Migrations
             }
 
             
-            var userManager = new UserManager<ApplicationUser>(
-                new UserStore<ApplicationUser>(context));
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
             if (!context.Users.Any(u => u.Email == "hohoanhao94@gmail.com"))
             {
@@ -57,7 +56,8 @@ namespace BugTracker.Migrations
                 {
                     UserName = "hohoanhao94@gmail.com",
                     Email = "hohoanhao94@gmail.com",
-                    FirstName = "Hao",
+                    Name ="Hao",
+                    FirstName = "HoanHao",
                     LastName = "Ho",
                     DisplayName = "HaoHo",
                 }, "Hohoanhao123456@");
@@ -65,6 +65,20 @@ namespace BugTracker.Migrations
             var adminId = userManager.FindByEmail("hohoanhao94@gmail.com").Id;
             userManager.AddToRole(adminId, "Admin");
 
+            if (!context.Users.Any(u => u.Email == "ho_hoan_hao94@yahoo.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "ho_hoan_hao94@yahoo.com",
+                    Email = "ho_hoan_hao94@yahoo.com",
+                    Name="Hao2",
+                    FirstName = "HaoHoan",
+                    LastName = "Ho",
+                    DisplayName = "HaoHo",
+                }, "Hohoanhao123456@");
+            }
+            var projectManagerId = userManager.FindByEmail("hohoanhao94@gmail.com").Id;
+            userManager.AddToRole(projectManagerId, "Project Manager");
 
         }
     }
