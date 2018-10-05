@@ -115,6 +115,8 @@ namespace BugTracker.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+        [Authorize(Roles ="Admin,Project Manager")]
         public ActionResult AssignUsers(int id)
         {
             var model = new ProjectAssignViewModel();
@@ -123,8 +125,7 @@ namespace BugTracker.Controllers
 
             var project = db.Projects.FirstOrDefault(p => p.Id == id);
             var users = db.Users.ToList();
-            var userIdsAssignedToProject = project.Users
-                .Select(p => p.Id).ToList();
+            var userIdsAssignedToProject = project.Users.Select(p => p.Id).ToList();
 
             model.UserList = new MultiSelectList(users, "Id", "Name", userIdsAssignedToProject);
 
@@ -133,6 +134,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpPost]
+        
         public ActionResult AssignUsers(ProjectAssignViewModel model)
         {
             //STEP 1: Find the project

@@ -22,6 +22,8 @@ namespace BugTracker.Controllers
         {
             return View(db.Users.ToList());
         }
+
+        [Authorize(Roles = "Admin")]
         public ActionResult ChangeRole(string id)
         {
             var model = new UserRoleViewModel();
@@ -31,8 +33,10 @@ namespace BugTracker.Controllers
             model.Id = id;
             model.Name = user.Name;
             var roles = roleManager.Roles.ToList();
+
+            var userRoles = userManager.GetRoles(id);
             
-            model.Roles = new MultiSelectList(roles, "Name", "Name");
+            model.Roles = new MultiSelectList(roles, "Name", "Name",userRoles);
             return View(model);
         }
 
@@ -60,8 +64,8 @@ namespace BugTracker.Controllers
             }
 
             //STEP 5: Refresh authentication cookies so the roles are updated instantly
-            var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
+            //var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            //signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
 
 
             return RedirectToAction("Index");
