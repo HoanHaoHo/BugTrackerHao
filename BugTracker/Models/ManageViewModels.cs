@@ -69,10 +69,6 @@ namespace BugTracker.Models
         [DataType(DataType.Text)]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
-
-        [Display(Name = "Full Name")]
-        public string FullName { get; set; }
-
     }
 
     public class AddPhoneNumberViewModel

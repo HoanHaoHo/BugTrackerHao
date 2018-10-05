@@ -284,7 +284,7 @@ namespace BugTracker.Controllers
             {
                 model.FirstName = user.FirstName;
                 model.LastName = user.LastName;
-                model.FullName = user.FirstName + " " + user.LastName;
+                
                 return View(model);
             }
             else

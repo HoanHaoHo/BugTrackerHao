@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace BugTracker.Controllers
 {
@@ -16,6 +17,7 @@ namespace BugTracker.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         // GET: ApplicationUsers
+        
         public ActionResult Index()
         {
             return View(db.Users.ToList());
@@ -28,8 +30,9 @@ namespace BugTracker.Controllers
             var user = userManager.FindById(id);
             model.Id = id;
             model.Name = user.Name;
-            var userRoles = roleManager.Roles.ToList();
-            model.Roles = new MultiSelectList(userRoles, "Name", "Name");
+            var roles = roleManager.Roles.ToList();
+            
+            model.Roles = new MultiSelectList(roles, "Name", "Name");
             return View(model);
         }
 
@@ -42,19 +45,24 @@ namespace BugTracker.Controllers
             var user = userManager.FindById(model.Id);
 
             //STEP 2: Get UserRoles:
-            var userRoles = userManager.GetRoles(model.Id);
+            var userRoles = userManager.GetRoles(user.Id);
 
             //STEP 3: Remove the roles from the user
             foreach (var role in userRoles)
             {
-                userManager.RemoveFromRole(model.Id, role);
+                userManager.RemoveFromRole(user.Id, role);
             }
 
             //STEP 4: Add roles to the user
             foreach (var role in model.SelectedRoles)
             {
-                userManager.AddToRole(model.Id, role);
+                userManager.AddToRole(user.Id, role);
             }
+
+            //STEP 5: Refresh authentication cookies so the roles are updated instantly
+            var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+            signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
+
 
             return RedirectToAction("Index");
         }

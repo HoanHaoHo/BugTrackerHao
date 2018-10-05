@@ -163,7 +163,6 @@ namespace BugTracker.Controllers
                     Name = model.Name,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    DisplayName = model.DisplayName
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
