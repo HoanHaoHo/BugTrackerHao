@@ -15,13 +15,17 @@ namespace BugTracker.Models
         public string LastName { get; set; }
         public string DisplayName { get; set; }
         public string Name { get; set; }
+        public virtual ICollection<TicketComment> TicketComments { get; set; }
+        public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
 
         public ApplicationUser()
         {
-
+            this.TicketAttachments = new HashSet<TicketAttachment>();
+            this.TicketComments = new HashSet<TicketComment>();
             Projects = new HashSet<Project>();
         }
-        public virtual ICollection<Project> Projects { get; set; }
+       
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -44,8 +48,12 @@ namespace BugTracker.Models
             return new ApplicationDbContext();
         }
 
-        public System.Data.Entity.DbSet<BugTracker.Models.Classes.Project> Projects { get; set; }
+        public System.Data.Entity.DbSet<Project> Projects { get; set; }
+        public System.Data.Entity.DbSet<Ticket> Tickets { get; set; }
+        public System.Data.Entity.DbSet<TicketStatus> TicketStatus { get; set; }
+        public System.Data.Entity.DbSet<TicketPriority> TicketPriorities { get; set; }
+        public System.Data.Entity.DbSet<TicketType> TicketTypes { get; set; }
 
-     
+
     }
 }
