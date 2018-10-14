@@ -15,6 +15,10 @@ namespace BugTracker.Controllers
 
         public ActionResult Index()
         {
+            if (User.IsInRole("Submitter"))
+                RedirectToAction("Tickets");
+            //var user = new ApplicationUser();
+            //var db = new ApplicationDbContext();
             return View();
         }
 

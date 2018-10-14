@@ -106,6 +106,25 @@ namespace BugTracker.Migrations
             var SubmitterId = userManager.FindByEmail("Submitter@yahoo.com").Id;
             userManager.AddToRole(SubmitterId, "Submitter");
 
+            context.TicketPriorities.AddOrUpdate(p => p.Name,
+             new TicketPriority { Name = "High" },
+             new TicketPriority { Name = "Medium" },
+             new TicketPriority { Name = "Low" },
+             new TicketPriority { Name = "Optional" }
+         );
+
+            context.TicketTypes.AddOrUpdate(t => t.Name,
+                new TicketType { Name = "Bug" },
+                new TicketType { Name = "Documentation" },
+                new TicketType { Name = "New Request" }
+            );
+
+            context.TicketStatus.AddOrUpdate(s => s.Name,
+                new TicketStatus { Name = "Active" },
+                new TicketStatus { Name = "In Progress" },
+                new TicketStatus { Name = "Optional" }
+            );
+
 
 
         }

@@ -25,7 +25,7 @@ namespace BugTracker.Models
         public int TicketStatusId { get; set; }
         public virtual TicketStatus TicketStatus { get; set; }
 
-        public int CreatorId { get; set; }
+        public string CreatorId { get; set; }
         public virtual ApplicationUser Creator { get; set; }
 
         public int ProjectId { get; set; }
@@ -33,5 +33,8 @@ namespace BugTracker.Models
 
         public string AssigneeId { get; set; }
         public virtual ApplicationUser Assignee { get; set; }
+
+       
+
     }
 }
