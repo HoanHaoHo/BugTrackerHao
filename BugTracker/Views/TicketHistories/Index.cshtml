@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BugTracker.Models.TicketAttachment>
+﻿@model IEnumerable<BugTracker.Models.TicketHistories>
 
 @{
     ViewBag.Title = "Index";
@@ -18,18 +18,18 @@
             @Html.DisplayNameFor(model => model.User.FirstName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FilePath)
+            @Html.DisplayNameFor(model => model.Property)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.OldValue)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Created)
+            @Html.DisplayNameFor(model => model.NewValue)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FileUrl)
+            @Html.DisplayNameFor(model => model.Changed)
         </th>
-        <th></th>
+        
     </tr>
 
 @foreach (var item in Model) {
@@ -41,16 +41,16 @@
             @Html.DisplayFor(modelItem => item.User.FirstName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FilePath)
+            @Html.DisplayFor(modelItem => item.Property)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Description)
+            @Html.DisplayFor(modelItem => item.OldValue)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Created)
+            @Html.DisplayFor(modelItem => item.NewValue)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FileUrl)
+            @Html.DisplayFor(modelItem => item.Changed)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

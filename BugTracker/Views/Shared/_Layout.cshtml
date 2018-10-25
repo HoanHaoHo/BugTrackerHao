@@ -86,6 +86,24 @@
                         <li>
                             <a href="/Tickets"><i class="fa fa-edit fa-fw"></i>Ticket</a>
                         </li>
+                        @if (User.IsInRole("Submitter"))
+                        {
+                            <li>
+                                <a href="/Tickets/SubmitterTickets">Submitter Ticket</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Developer"))
+                        {
+                            <li>
+                                <a href="/Tickets/DeveloperTickets">Developer Ticket</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Project Manager"))
+                        {
+                            <li>
+                                <a href="/Tickets/ProjectManagerTickets">ProjectManager Tickets</a>
+                            </li>
+                        }
                         <li>
                             <a href="#"><i class="fa fa-wrench fa-fw"></i>Ticket Options<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -102,41 +120,11 @@
                                         <li>
                                             <a href="/TicketStatus">Ticket Status</a>
                                         </li>
-                                    }
-                                    if (User.IsInRole("Submitter"))
-                                    {
                                         <li>
-                                            <ul class="nav nav-second-level">
-                                                <li><a href="@Url.Action("Index", "Tickets", new { id="" })" class=" hvr-bounce-to-right">>All Tickets</a></li>
-                                                <li><a href="@Url.Action("Index", "Tickets",new { id="User"})" class=" hvr-bounce-to-right">Your Tickets</a></li>
-                                                <li><a href="@Url.Action("Create","Tickets")" class=" hvr-bounce-to-right"><span class="nav-label">Create Ticket</span></a></li>
-                                            </ul>
-                                        </li>
-
-                                    }
-                                    if (User.IsInRole("Developer"))
-                                    {
-                                        <li>
-
-                                            <ul class="nav nav-second-level">
-                                                <li><a href="@Url.Action("Index", "Tickets", new { id="" })" class=" hvr-bounce-to-right">All Tickets</a></li>
-                                                <li> <a href="@Url.Action("index", "Tickets", new { id = "myProjectsTicket" })" class=" hvr-bounce-to-right"><span class="nav-label">Your Project Tickets</span> </a></li>
-                                            </ul>
+                                            <a href="/TicketComments"><i class="fa fa-comment"></i> Add Ticket Comments</a>
                                         </li>
                                     }
-                                    if (User.IsInRole("Project Manager"))
-                                    {
 
-                                        <li>
-                                            
-                                            <ul class="nav nav-second-level">
-                                                <li>
-                                                    <a href="@Url.Action("Index", "Tickets", new { id = "myTicket" })" class=" hvr-bounce-to-right"><span class="nav-label">Tickets of Your Project</span> </a>
-                                                </li>
-                                                <li> <a href="@Url.Action("index", "Tickets", new { id = "" })" class=" hvr-bounce-to-right"><span class="nav-label">All Tickets</span> </a></li>
-                                            </ul>
-                                        </li>
-                                    }
                                 }
 
 
@@ -145,7 +133,6 @@
                         </li>
 
                         <!-- /.nav-second-level -->
-                        
                         @*<li>
             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">

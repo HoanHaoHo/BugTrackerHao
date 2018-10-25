@@ -3,7 +3,13 @@
 @{
     ViewBag.Title = "Details";
 }
-
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#historiesTable').DataTable();
+        });
+    </script>
+}
 <h2>Details</h2>
 
 <div>
@@ -19,7 +25,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Project.Name)
+            @Html.DisplayNameFor(model => model.Project)
         </dt>
 
         <dd>
@@ -27,7 +33,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TicketPriority.Name)
+            @Html.DisplayNameFor(model => model.TicketPriority)
         </dt>
 
         <dd>
@@ -35,7 +41,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TicketStatus.Name)
+            @Html.DisplayNameFor(model => model.TicketStatus)
         </dt>
 
         <dd>
@@ -43,7 +49,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TicketType.Name)
+            @Html.DisplayNameFor(model => model.TicketType)
         </dt>
 
         <dd>
@@ -83,15 +89,130 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.CreatorId)
+            @Html.DisplayNameFor(model => model.Creator)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CreatorId)
+            @Html.DisplayFor(model => model.Creator.FirstName)
         </dd>
 
     </dl>
 </div>
+
+<div class="hr-text hr-text-left m-t-3">
+    <h4 class="text-white"><strong class="m-r-1">Comments </strong><span class="badge">@Model.TicketComments.Count</span></h4>
+</div>
+
+<div>
+    @using (Html.BeginForm("Create", "TicketComments", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("TicketId", Model.Id)
+        <textarea name="CommentBody" style="width" :400px"></textarea>
+        <div>
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <h5 style="color : darkslateblue">@TempData["ErrorMessage"]</h5>
+            }
+        </div>
+
+        <input type="submit" value="Submit" />
+    }
+</div>
+@foreach (var ticketcomment in Model.TicketComments.OrderByDescending(t => t.Created))
+{
+    <div>
+        <h5><span>@ticketcomment.User.Name</span> <small><span>at  @ticketcomment.Created</span></small></h5>
+        <span>
+            @ticketcomment.Comment
+        </span>
+        @using (Html.BeginForm("Delete", "TicketComments", new { id = ticketcomment.Id }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" />
+            </div>
+        }
+    </div>
+}
+
+
+<div class="hr-text hr-text-left m-t-3">
+    <h4 class="text-white"><strong class="m-r-1">Ticket History</strong><span class="badge">@Model.TicketHistories.Count</span></h4>
+</div>
+
+<div>
+    <table id="historiesTable" class="table">
+        <thead>
+            <tr>
+                <th>
+                    Modifier
+                </th>
+                <th>
+                    Property
+                </th>
+                <th>
+                    OldValue
+                </th>
+                <th>
+                    NewValue
+                </th>
+                <th>
+                    Changed
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.TicketHistories)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Property)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OldValue)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NewValue)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Changed)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="hr-text hr-text-left m-t-3">
+    <h4 class="text-white"><strong class="m-r-1">Attachment item </strong><span class="badge">@Model.TicketAttachments.Count</span></h4>
+</div>
+
+<div>
+    @using (Html.BeginForm("Create", "TicketAttachments", FormMethod.Post, new {enctype="Multipart/form-data"}))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("TicketId", Model.Id)
+      
+        <input name="attachmentFile" type="file" class="form-control" id ="fileUpload"/>
+        <input type="submit" value="Submit" />
+    }
+</div>
+@foreach (var ticketattachment in Model.TicketAttachments)
+{
+    <div>
+        <a download href=@ticketattachment.FilePath>
+            <h5><span>@ticketattachment.User.Name</span> <small><span>at  @ticketattachment.Created</span></small></h5>
+            @Html.DisplayFor(model => ticketattachment.FilePath)
+        </a>
+        
+    </div>
+}
+</br>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")

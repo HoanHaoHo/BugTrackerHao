@@ -34,7 +34,21 @@ namespace BugTracker.Models
         public string AssigneeId { get; set; }
         public virtual ApplicationUser Assignee { get; set; }
 
-       
+        public virtual ICollection<ApplicationUser> Users { get; set; }
+        public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
+        public virtual ICollection<TicketComment> TicketComments { get; set; }
+        public virtual ICollection<TicketHistories> TicketHistories { get; set; }
+        public virtual ICollection<TicketNotification> TicketNotifications { get; set; }
+
+        public Ticket()
+        {
+            Users = new HashSet<ApplicationUser>();
+            TicketNotifications = new HashSet<TicketNotification>();
+            TicketHistories = new HashSet<TicketHistories>();
+            TicketComments = new HashSet<TicketComment>();
+            TicketAttachments = new HashSet<TicketAttachment>();
+        }
+
 
     }
 }

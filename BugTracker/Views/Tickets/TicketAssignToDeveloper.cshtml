@@ -1,0 +1,20 @@
+﻿@model BugTracker.Models.TicketAssignViewModel
+@{
+    ViewBag.Title = "Ticket Assign";
+}
+<div class="content-main">
+    <div class="blank">
+        <h2>Assign</h2>
+        <hr />
+        <section class="content">
+            @using (Html.BeginForm())
+            {<div class="form-group">
+                    @Html.HiddenFor(p => p.Id)
+                    @Html.ListBoxFor(p => p.SelectedUsers, Model.Developer)
+                    @Html.ValidationMessageFor(model => model.Developer, "", new { @class = "text-danger" })
+                    <input type="submit" value="Submit!"/>
+                </div>
+            }
+        </section>
+    </div>
+</div>

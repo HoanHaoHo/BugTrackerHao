@@ -8,12 +8,15 @@ using System.Web;
 
 namespace BugTracker.Helper
 {
-    public class UserRolesHelper
+    public class UserRoleHelper
     {
         private ApplicationDbContext Db;
+
         private UserManager<ApplicationUser> UserManager;
+
         private RoleManager<IdentityRole> RoleManager;
-        public UserRolesHelper()
+
+        public UserRoleHelper()
         {
             Db = new ApplicationDbContext();
             UserManager = new
@@ -21,20 +24,15 @@ namespace BugTracker.Helper
             RoleManager = new
             RoleManager<IdentityRole>(new RoleStore<IdentityRole>(Db));
         }
+
         public List<IdentityRole> GetAllRoles()
         {
             return RoleManager.Roles.ToList();
         }
+
         public List<string> GetUserRoles(string id)
         {
             return UserManager.GetRoles(id).ToList();
         }
-        public ICollection<ApplicationUser> UsersInRole(string role)
-        {
-            var roleId = Db.Roles.Where(p => p.Name == role).Select(p => p.Id).FirstOrDefault();
-
-            return Db.Users.Where(p => p.Roles.Any(t => t.RoleId == roleId)).ToList();
-        }
-
     }
 }

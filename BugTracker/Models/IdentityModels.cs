@@ -18,9 +18,9 @@ namespace BugTracker.Models
         public string Name { get; set; }
         public virtual ICollection<TicketComment> TicketComments { get; set; }
         public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
+        public virtual ICollection<TicketHistories> TicketHistories { get; set; }
 
         public virtual ICollection<Project> Projects { get; set; }
-
         [InverseProperty("Creator")]
         public virtual ICollection<Ticket> CreatedTickets { get; set; }
 
@@ -30,11 +30,12 @@ namespace BugTracker.Models
        
         public ApplicationUser()
         {
-            this.TicketAttachments = new HashSet<TicketAttachment>();
-            this.TicketComments = new HashSet<TicketComment>();
             Projects = new HashSet<Project>();
             AssignedTickets = new HashSet<Ticket>();
             CreatedTickets = new HashSet<Ticket>();
+            TicketHistories = new HashSet<TicketHistories>();
+            TicketComments = new HashSet<TicketComment>();
+            TicketAttachments = new HashSet<TicketAttachment>();
         }
        
 
@@ -65,6 +66,9 @@ namespace BugTracker.Models
         public System.Data.Entity.DbSet<TicketPriority> TicketPriorities { get; set; }
         public System.Data.Entity.DbSet<TicketType> TicketTypes { get; set; }
 
-
+        public System.Data.Entity.DbSet<BugTracker.Models.TicketComment> TicketComments { get; set; }
+        public System.Data.Entity.DbSet<BugTracker.Models.TicketHistories> TicketHistories { get; set; }
+        public System.Data.Entity.DbSet<BugTracker.Models.TicketAttachment> TicketAttachments { get; set; }
+        public System.Data.Entity.DbSet<BugTracker.Models.TicketNotification> TicketNotifications { get; set; }
     }
 }
