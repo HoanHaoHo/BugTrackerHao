@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using BugTracker.Helper;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
 
@@ -53,31 +54,23 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Comment,TicketId,UserId")] TicketComment ticketComment, string CommentBody, int TicketId)
+        public ActionResult Create([Bind(Include = "Id,Comment,TicketId,UserId")] TicketComment ticketComment, string CommentBody, Ticket ticket)
         {
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrWhiteSpace(CommentBody))
                 {
                     TempData["ErrorMessage"] = "Comment is required";
-                    return RedirectToAction("Details", "Tickets", new { id = TicketId });
+                    return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
                 }
                 ticketComment.Comment = CommentBody;
                 ticketComment.Created = DateTimeOffset.Now;
                 ticketComment.UserId = User.Identity.GetUserId();
                 db.TicketComments.Add(ticketComment);
-            
-                var userComment = db.Users.FirstOrDefault(p => p.Id == ticketComment.UserId);
-                // Plug in your email service here to send an email.
-                var newEmailService = new PersonalEmail();
-                var newMail = new MailMessage(WebConfigurationManager.AppSettings["emailto"], userComment.Email);
-                newMail.Body ="You got new comment" ;
-                newMail.Subject ="Check your details ticket" ;
-                newMail.IsBodyHtml = true;
-                await newEmailService.SendAsync(newMail);
-
+                ticket = db.Tickets.Find(ticketComment.TicketId);
+                ticket.SendEmail(false);
                 db.SaveChanges();
-                return RedirectToAction("Details", "Tickets", new { id = TicketId });
+                return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
             }
 
             ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketComment.TicketId);

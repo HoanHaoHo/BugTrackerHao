@@ -211,6 +211,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper\ImageUploadValidator.cs" />
+    <Compile Include="Helper\NotifyHelper.cs" />
     <Compile Include="Helper\UserRoleHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />

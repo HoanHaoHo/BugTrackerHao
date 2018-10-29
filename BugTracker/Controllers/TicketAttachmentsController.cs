@@ -19,14 +19,13 @@ namespace BugTracker.Controllers
     public class TicketAttachmentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-      
+        public ApplicationDbContext DB { get; set; }
         // GET: TicketAttachments
         public ActionResult Index()
         {
             var ticketAttachments = db.TicketAttachments.Include(t => t.Ticket).Include(t => t.User);
             return View(ticketAttachments.ToList());
         }
-
         // GET: TicketAttachments/Details/5
         public ActionResult Details(int? id)
         {
@@ -55,7 +54,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TicketId,FilePath,Created,UserId")] TicketAttachment ticketAttachment, HttpPostedFileBase attachmentFile)
+        public ActionResult Create([Bind(Include = "TicketId,FilePath,Created,UserId")] TicketAttachment ticketAttachment, HttpPostedFileBase attachmentFile, Ticket ticket)
         {
             if (ModelState.IsValid)
             {
@@ -67,20 +66,12 @@ namespace BugTracker.Controllers
                     ticketAttachment.Created = DateTimeOffset.Now;
                     ticketAttachment.UserId = User.Identity.GetUserId();
                     db.TicketAttachments.Add(ticketAttachment);
-
-                    //var userAttachment = db.Users.FirstOrDefault(p => p.Id == ticketAttachment.UserId);
-                    //// Plug in your email service here to send an email.
-                    //var newEmailService = new PersonalEmail();
-                    //var newMail = new MailMessage(WebConfigurationManager.AppSettings["emailto"], userAttachment.Email);
-                    //newMail.Body = "You got new attachment";
-                    //newMail.Subject = "Check your details ticket";
-                    //newMail.IsBodyHtml = true;
-                    //await newEmailService.SendAsync(newMail);
+                    ticket = db.Tickets.Find(ticketAttachment.TicketId);
+                    ticket.SendEmail(true);
                     db.SaveChanges();
                 }
-               
                 
-                return RedirectToAction("Details","Tickets", new { id = ticketAttachment.TicketId });
+                return RedirectToAction("Details", "Tickets", new { id = ticketAttachment.TicketId });
             }
 
             ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketAttachment.TicketId);
@@ -148,6 +139,8 @@ namespace BugTracker.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        
+        
 
         protected override void Dispose(bool disposing)
         {

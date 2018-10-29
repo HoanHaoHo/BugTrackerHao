@@ -47,15 +47,21 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
+
                 </button>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a>You should Log off before choose another role</a>
+                }
                 <a class="navbar-brand">Hao's Project BugTracker</a>
+
             </div>
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right"></ul>
 
             @Html.Partial("_LoginPartial")
-
+           
 
 
             <div class="navbar-default sidebar" role="navigation">
@@ -75,6 +81,43 @@
                         @*<li>
             <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
         </li>*@
+                        <li>
+                            @using (Html.BeginForm("DemoLogin", "Account", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("Email", "hohoanhao94@gmail.com")
+                                @Html.Hidden("Password", "Hohoanhao123456@")
+                                <button type="submit" class="btn btn-success">Login Admin</button>
+                            }
+                        </li>
+                        <li>
+                            @using (Html.BeginForm("DemoLogin", "Account", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("Email", "ho_hoan_hao94@yahoo.com")
+                                @Html.Hidden("Password", "Hohoanhao123456@")
+                                <button type="submit" class="btn btn-success">Login Project Manager</button>
+                            }
+                        </li>
+                        <li>
+                            @using (Html.BeginForm("DemoLogin", "Account", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("Email", "Developer@yahoo.com")
+                                @Html.Hidden("Password", "Hohoanhao123456@")
+                                <button type="submit" class="btn btn-success">Login Developer</button>
+                            }
+                        </li>
+                        <li>
+                            @using (Html.BeginForm("DemoLogin", "Account", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("Email", "Submitter@yahoo.com")
+                                @Html.Hidden("Password", "Hohoanhao123456@")
+                                <button type="submit" class="btn btn-success">Login Submitter</button>
+                            }
+                        </li>
+
                         <li>
                             <a href="/Projects"><i class="fa fa-bar-chart-o fa-fw"></i>Projects<span class="fa arrow"></span></a>
 

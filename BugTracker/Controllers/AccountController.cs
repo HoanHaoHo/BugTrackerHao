@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Web.Configuration;
 
 namespace BugTracker.Controllers
 {
@@ -66,7 +67,26 @@ namespace BugTracker.Controllers
             return View();
         }
 
-
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DemoLogin(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            // This wont count any login failures towards account lockout
+            // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var chooseRole = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            switch (chooseRole)
+            {
+                case SignInStatus.Success:
+                    return RedirectToAction("Index", "Tickets");
+                default:
+                    return RedirectToAction("Index", "Home");
+            }
+        }
         //
         // POST: /Account/Login
         [HttpPost]

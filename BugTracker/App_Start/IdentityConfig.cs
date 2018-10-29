@@ -49,37 +49,36 @@ namespace BugTracker
                 }
             };
         }
-
+        public void Warning(MailMessage message)
+        {
+            var Username = WebConfigurationManager.AppSettings["username"];
+            var Password = WebConfigurationManager.AppSettings["password"];
+            var host = WebConfigurationManager.AppSettings["host"];
+            int port = Convert.ToInt32(WebConfigurationManager.AppSettings["port"]);
+            using (var smtp = new SmtpClient()
+            {
+                Host = host,
+                Port = port,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(Username, Password)
+            })
+            {
+                try
+                {
+                    smtp.Send(message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            };
+        }
     }
 
 
-    //public async Task TicketNofitication(Ticket tickets)
-    //{
-    //    var Username = WebConfigurationManager.AppSettings["username"];
-    //    var Password = WebConfigurationManager.AppSettings["password"];
-    //    var host = WebConfigurationManager.AppSettings["host"];
-    //    int port = Convert.ToInt32(WebConfigurationManager.AppSettings["port"]);
-    //    using (var smtp = new SmtpClient()
-    //    {
-    //        Host = host,
-    //        Port = port,
-    //        EnableSsl = true,
-    //        DeliveryMethod = SmtpDeliveryMethod.Network,
-    //        UseDefaultCredentials = false,
-    //        Credentials = new NetworkCredential(Username, Password)
-    //    })
-    //    {
-    //        try
-    //        {
-    //            await smtp.SendMailAsync(tickets);
-    //        }
-    //        catch (Exception e)
-    //        {
-    //            Console.WriteLine(e.Message);
-    //            await Task.FromResult(0);
-    //        }
-    //    };
-    //}
+
     public class EmailService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)

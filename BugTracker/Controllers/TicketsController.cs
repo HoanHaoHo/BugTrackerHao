@@ -62,12 +62,12 @@ namespace BugTracker.Controllers
         {
             //STEP 1: Find the project
             var ticket = db.Tickets.FirstOrDefault(t => t.Id == model.Id);
-            //STEP 2: Remove all assigned users from ticket
-            var assignedUsers = ticket.Users.ToList();
-            foreach (var userA in assignedUsers)
-            {
-                ticket.Users.Remove(userA);
-            }
+            ////STEP 2: Remove all assigned users from ticket
+            //var assignedUsers = ticket.Users.ToList();
+            //foreach (var userA in assignedUsers)
+            //{
+            //    ticket.Users.Remove(userA);
+            //}
 
             //STEP 3: Assign users to the ticket
             if (model.SelectedUsers != null)
@@ -80,7 +80,19 @@ namespace BugTracker.Controllers
                 }
             }
             //STEP 4: Save changes to the database
-
+            if(ticket.AssigneeId != null)
+            {
+                var user = db.Users.FirstOrDefault(p => p.Id == ticket.AssigneeId);
+                //Plug in your email service here to send an email.
+                var newEmailService = new PersonalEmail();
+                var newMail = new MailMessage(WebConfigurationManager.AppSettings["emailto"], user.Email)
+                {
+                    Body = "You are assigned to new ticket, check your ticket",
+                    Subject = "Check your ticket",
+                    IsBodyHtml = true
+                };
+                newEmailService.Warning(newMail);
+            }
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -166,6 +178,7 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Title,Description,Created,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,AssigneeId")] Ticket ticket)
         {
+           
             if (ModelState.IsValid)
             {
                 var dateChanged = DateTimeOffset.Now;
@@ -193,10 +206,11 @@ namespace BugTracker.Controllers
                         changes.Add(history);
                     }
                 }
-            
                 db.TicketHistories.AddRange(changes);
                 db.SaveChanges();
+
                 return RedirectToAction("Index");  
+
             }
             
             return View(ticket);
@@ -234,12 +248,12 @@ namespace BugTracker.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-       
         public ICollection<ApplicationUser> RoleChange(string role)
         {
             var userId = db.Roles.Where(p => p.Name == role).Select(p => p.Id).FirstOrDefault();
             return db.Users.Where(p => p.Roles.Any(t => t.RoleId == userId)).ToList();
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
