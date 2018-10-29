@@ -19,7 +19,6 @@ namespace BugTracker.Controllers
     public class TicketAttachmentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-        public ApplicationDbContext DB { get; set; }
         // GET: TicketAttachments
         public ActionResult Index()
         {
